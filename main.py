@@ -50,7 +50,12 @@ for idx, ele in enumerate(res):
 for idx, ele in enumerate(res):
     res[idx] = ele.replace(char2, '')
 
-print(COLOR_STYLE_BRIGHT + "Current saves: " + COLOR_RESET_ALL + COLOR_GREEN + str(res) + COLOR_RESET_ALL)
+current_saves = COLOR_STYLE_BRIGHT + "Current saves: " + COLOR_RESET_ALL + COLOR_GREEN + str(res) + COLOR_RESET_ALL
+
+for character in current_saves:
+    sys.stdout.write(character)
+    sys.stdout.flush()
+    time.sleep
 
 save_selection = input(COLOR_STYLE_BRIGHT + "Do you want to [o]pen saved game, create [n]ew game or [d]elete an existing save? " + COLOR_RESET_ALL)
 
@@ -144,20 +149,34 @@ def run(play):
     print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "S: "+ COLOR_RESET_ALL + "Go south" + COLOR_RESET_ALL)
     print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "E: " + COLOR_RESET_ALL + "Go east" + COLOR_RESET_ALL)
     print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "W: " + COLOR_RESET_ALL + "Go west" + COLOR_RESET_ALL)
-    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "D: " + COLOR_RESET_ALL + "Access to your diary.")
-    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "I: " + COLOR_RESET_ALL + "View items. When in this view, type the name of an item to examine it." + COLOR_RESET_ALL)
-    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "P: " + COLOR_RESET_ALL + "Choose which item to equip on you. When in this view, type the name of an item to equip it." + COLOR_RESET_ALL)
-    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "T: " + COLOR_RESET_ALL + "Throw an item. When in this view, type the name of an item to throw it away." + COLOR_RESET_ALL)
+    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "D: " + COLOR_RESET_ALL + "Access to your diary. While in this view, enter anything in the input to close the view.")
+    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "I: " + COLOR_RESET_ALL + "View items. When in this view, type the name of an item to examine it. While in this view, enter anything in the input to close the view." + COLOR_RESET_ALL)
+    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "P: " + COLOR_RESET_ALL + "Choose which item to equip on you. When in this view, type the name of an item to equip it. While in this view, enter anything in the input to close the view." + COLOR_RESET_ALL)
+    print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "T: " + COLOR_RESET_ALL + "Throw an item. When in this view, type the name of an item to throw it away. While in this view, enter anything in the input to close the view." + COLOR_RESET_ALL)
     print(COLOR_BLUE + COLOR_STYLE_BRIGHT + "Q: " + COLOR_RESET_ALL + "Quit game")
     print(" ")
     print(COLOR_GREEN + COLOR_STYLE_BRIGHT +"Hints:" + COLOR_RESET_ALL)
     print("If you find an item on the ground, type the name of the item to take it.")
     print("Some items have special triggers, which will often be stated in the description. Others can only be activated in certain situations, like in combat.")
     print(" ")
+    loading = 10
+    while loading > 0:
+        print("Loading game... ▅▃▁", end='\r')
+        time.sleep(.15)
+        print("Loading game... ▃▃▃", end='\r')
+        time.sleep(.15)
+        print("Loading game... ▁▃▅", end='\r')
+        time.sleep(.15)
+        print("Loading game... ▃▃▃", end='\r')
+        time.sleep(.15)
+        loading -= 1
     # Mapping stuff
 
     while play == 1:
         global player
+        
+        # clear text
+        os.system('clear')
 
         # calculate player armor protection
         # and write it to the save file
@@ -352,24 +371,29 @@ def run(play):
         print(" ")
         if command.lower().startswith('go'):
             print("Rather than saying Go <direction>, simply say <direction>.")
+            time.sleep(1)
         elif command.lower().startswith('n'):
             if "North" in map["point" + str(map_location)]["blocked"]:
                 print("You cannot go that way.")
+                time.sleep(1)
             else:
                 player["y"] += 1
         elif command.lower().startswith('s'):
             if "South" in map["point" + str(map_location)]["blocked"]:
                 print("You cannot go that way.")
+                time.sleep(1)
             else:
                 player["y"] -= 1
         elif command.lower().startswith('e'):
             if "East" in map["point" + str(map_location)]["blocked"]:
                 print("You cannot go that way.")
+                time.sleep(1)
             else:
                 player["x"] += 1
         elif command.lower().startswith('w'):
             if "West" in map["point" + str(map_location)]["blocked"]:
                 print("You cannot go that way.")
+                time.sleep(1)
             else:
                 player["x"] -= 1
         elif command.lower().startswith('d'):
@@ -406,7 +430,7 @@ def run(play):
                 print("Description: " + enemy[which_enemy]["description"])
             else:
                 print("You don't know about that enemy.")
-            print(" ")
+            finsihed = input(" ")
         elif command.lower().startswith('i'):
             print("Current Health: " + COLOR_RED + str(player["health"]) + COLOR_RESET_ALL)
             print("Maximum Health: " + COLOR_RED + str(player["max health"]) + COLOR_RESET_ALL)
@@ -454,7 +478,7 @@ def run(play):
                 print(" ")
             else:
                 print("You do not have that item.")
-                print(" ")
+            finsihed = input(" ")
         elif command.lower().startswith('t'):
             # equipment
             if player["held item"] == " ":
@@ -494,7 +518,7 @@ def run(play):
                     print(" ")
             else:
                 print("You do not have that item.")
-                print(" ")
+            finsihed = input(" ")
         elif command.lower().startswith('p'):
             # equipment
             if player["held item"] == " ":
@@ -532,7 +556,7 @@ def run(play):
                 print(" ")
             else:
                 print("You do not have that item.")
-                print(" ")
+            finsihed = input(" ")
         elif command.lower().startswith('m'):
             if "Map" in player["inventory"]:
                 print("**|**")
@@ -541,7 +565,7 @@ def run(play):
                 print(" ")
             else:
                 print("You do not have a map.")
-                print(" ")
+            finsihed = input(" ")
         elif command in map["point" + str(map_location)]["item"]:
             if command not in player["inventory"]:
                 player["inventory"].append(command)
@@ -553,6 +577,7 @@ def run(play):
             return play
         else:
             print("'" + command + "' is not a valid command")
+            time.sleep(1)
             print(" ")
 
 if play == 1:
@@ -580,6 +605,8 @@ save_file_quit = save_file
 with open(save_file_quit, "w") as f:
     f.write(dumped)
 
+# clear terminal prompt
+os.system('clear')
 
 # deinitialize colorame
 deinit()

@@ -140,7 +140,7 @@ Doomed Horror:
     max damage: 1.5
   health:
     min spawning health: 8
-    max spawning helath: 11
+    max spawning health: 11
     max health level: 11
   agility: .35
   inventory:
